@@ -5,58 +5,132 @@
 <head>
   <meta charset="UTF-8">
   <title>Księgarnia</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
         rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
         crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container-fluid">
-    <a class="navbar-brand" th:href="@{/index}"><b>Księgarnia</b></a>
-    <a class="navbar-brand" th:href="@{/logout}"><b>Wyloguj się</b></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  </div>
-</nav>
-<br /><br /><br />
-<div class="container">
-  <div class="row col-md-10">
-    <br /><br /><br />
-    <h2>Katalog książek</h2>
-  </div>
-  <form th:action="@{/catalog}" method="get" >
-  <div class="row">
-    <div class="col-3">
-      <input class="col-sm-10" id="txtSearch" type="text" name="genre" value="Gatunek"
-             onfocus="if (this.value == 'Gatunek') {this.value = '';}"
-             onblur="if (this.value == '') {this.value = 'Gatunek';}">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" th:href="@{/index}"><b>Księgarnia</b></a>
+      <a class="navbar-brand" th:href="@{/logout}"><b>Wyloguj się</b></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
-    <div class="col-2">
-      <button type="button" class="btn btn-primary mb-1" onclick="location.href='/catalog'"><b>Filtruj</b></button>
-    </div>
-  </div>
-  </form>
+  </nav>
   <br /><br /><br />
-  <table class="table table-bordered table-hover ">
-    <thead class="table-default bg-primary navbar-brand">
-    <tr class="text-light">
-      <th>Tytuł</th>
-      <th>Autor</th>
-      <th>Gatunek</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each = "book : ${books}">
-      <td th:text = "${book.title}"></td>
-      <td th:text = "${book.author}"></td>
-      <td th:text = "${book.genre}"></td>
-    </tr>
-    </tbody>
+  <div class="container">
+    <div class="row col-md-10">
+      <br /><br /><br />
+      <h2>Katalog książek</h2>
+    </div>
+    <form method="get" th:action="@{/catalog}">
+      <div class="col-3">
+        <div class="input-group mb-1">
+          <input class="form-control" type="text" name="genre" placeholder="Gatunek" aria-label="Gatunek" aria-describedby="basic-addon2">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="submit" >Filtruj</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <br /><br />
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBook" data-whatever="@mdo">Dodaj</button>
 
-  </table>
-  <button type="button" class="btn btn-primary mb-1" onclick="location.href='/catalog'"><b>Dodaj</b></button>
-</div>
+    <br /><br />
+    <table class="table table-bordered table-hover ">
+      <thead class="table-default bg-primary navbar-brand">
+      <tr class="text-light">
+        <th>Id</th>
+        <th>Tytuł</th>
+        <th>Autor</th>
+        <th>Gatunek</th>
+        <th>Akcje</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr th:each = "book : ${books}">
+          <td th:text = "${book.id}"></td>
+          <td th:text = "${book.title}"></td>
+          <td th:text = "${book.author}"></td>
+          <td th:text = "${book.genre}"></td>
+          <td>
+            <div class="btn-group">
+              <!--<button  type="button" th:href="@{/catalog/delete/(id=${book.id})}" class="btn btn-primary" data-toggle="modal" id="deleteButton" data-target="#deleteBook">Delete</button>-->
+              <a th:href="@{/catalog/delete/(id=${book.id})}" class="btn btn-primary" id="deleteButton">Delete</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- OKNO DODAWANIA -->
+    <div class="modal fade" id="addBook" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Nowa książka</h5>
+          </div>
+          <div class="modal-body">
+            <form th:action="@{/catalog/add}" method="post">
+              <div class="form-group">
+                <label for="title" class="col-form-label">Tytuł:</label>
+                <input type="text" class="form-control" id="title" name="title">
+              </div>
+              <div class="form-group">
+                <label for="author" class="col-form-label">Autor:</label>
+                <input type="text" class="form-control" id="author" name="author">
+              </div>
+              <div class="form-group">
+                <label for="genre" class="col-form-label">Gatunek:</label>
+                <input type="text" class="form-control" id="genre" name="genre">
+              </div>
+              </br>
+              <button type="submit" class="btn btn-primary">Zatwierdź</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OKNO USUWANIA -->
+    <div class="modal fade" id="deleteBook" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Potwierdź usunięcie</h5>
+          </div>
+          <div class="modal-body">
+            <p>Jesteś pewny że chcesz usunąć tę książkę?</p>
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" id="confirmDeleteButton" href="">Tak, usuń</a>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var $ = jQuery;
+        jQuery(document).ready(function($){
+              $('table #deleteButton').on('click', function(event){
+                  event.preventDefault();
+                  var href = $(this).attr('href');
+
+                  $('#confirmDeleteButton').attr('href', href);
+                  $('#deleteBook').modal();
+              });
+        });
+    </script>
+  </div>
 </body>
 </html>

@@ -21,8 +21,9 @@ public class Startup {
 	CommandLineRunner runner(BookRepository repository)
 	{
 		return args -> {
-
-			repository.insert(GenerateInput());
+			List<Book> collection = repository.findAll();
+			if(collection.isEmpty())
+				repository.insert(GenerateInput());
 		};
 	}
 
