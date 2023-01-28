@@ -2,55 +2,40 @@ package springmongoapp.bookStore.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import springmongoapp.bookStore.model.Book;
 import springmongoapp.bookStore.repository.BookRepository;
+import springmongoapp.bookStore.service.BookService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
+@RequestMapping("/")
 public class CatalogController {
-    private final BookRepository repository;
+    private final BookService service;
 
-    public CatalogController(BookRepository repository)
+    public CatalogController(BookService service)
     {
-        this.repository = repository;
+        this.service = service;
     }
 
 
     @GetMapping("/catalog")
-    public String index(Model model, String genre)
+    public String getAll(Model model, String genre)
     {
         if(genre != null)
         {
             if(genre.isEmpty())
-                model.addAttribute("books", repository.findAll());
+                model.addAttribute("books", service.getAll());
             else
-                model.addAttribute("books", repository.findByGenre(genre));
+                model.addAttribute("books", service.getByGenre(genre));
         }
         else
-            model.addAttribute("books", repository.findAll());
+            model.addAttribute("books", service.getAll());
 
         return "catalog";
     }
 
-    @PostMapping("/catalog/add")
-    public String add(Book book)
-    {
-        repository.insert(book);
-
-        return "redirect:/catalog";
-    }
-
-    @RequestMapping(value="/catalog/delete/", method= {RequestMethod.DELETE, RequestMethod.GET})
-    public String delete(String id)
-    {
-        repository.deleteById(id);
-
-        return "redirect:/catalog";
-    }
 
 }

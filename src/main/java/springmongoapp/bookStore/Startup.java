@@ -34,49 +34,58 @@ public class Startup {
 				"9781234567897",
 				"Wieża Jaskółki",
 				"Andrzej Sapkowski",
-				"Fantasy"
+				"Fantasy",
+				3
 		);
 		Book book2 = new Book(
 				"9781234567861",
 				"Pani Jeziora",
 				"Andrzej Sapkowski",
-				"Fantasy"
+				"Fantasy",
+				2
 		);
 		Book book3 = new Book(
 				"9781234567235",
 				"Rok 1984",
 				"George Orwell",
-				"Powieść dystopijna"
+				"Powieść dystopijna",
+				8
 		);
 		Book book4 = new Book(
 				"9781234567789",
 				"Pan Tadeusz",
 				"Adam Mickiewicz",
-				"Poezja epicka"
+				"Poezja epicka",
+				10
+
 		);
 		Book book5 = new Book(
 				"9781237367897",
 				"Krzyżacy",
 				"Henryk Sienkiewicz",
-				"Powieść historyczna"
+				"Powieść historyczna",
+				5
 		);
 		Book book6 = new Book(
 				"9787734567897",
 				"Bagno",
 				"Przemysław Piotrowski",
-				"Kryminał"
+				"Kryminał",
+				7
 		);
 		Book book7 = new Book(
 				"9786634567897",
 				"Sfora",
 				"Przemysław Piotrowski",
-				"Kryminał"
+				"Kryminał",
+				1
 		);
 		Book book8 = new Book(
 				"9786634567897",
 				"Złota klatka",
 				"Camilla Lackberg",
-				"Kryminał"
+				"Kryminał",
+				4
 		);
 
 		List<Book> bookList = new ArrayList<>();

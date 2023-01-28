@@ -21,11 +21,15 @@ public class Book {
     private String author;
     private String genre;
 
-    public Book(String isbn, String title, String author, String genre) {
+    private int amount;
+
+
+    public Book(String isbn, String title, String author, String genre, int amount) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.genre = genre;
+        this.amount = amount;
     }
 
 }
