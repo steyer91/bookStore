@@ -1,9 +1,4 @@
 package springmongoapp.bookStore.model;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -20,9 +15,7 @@ public class Book {
     private String title;
     private String author;
     private String genre;
-
     private int amount;
-
 
     public Book(String isbn, String title, String author, String genre, int amount) {
         this.isbn = isbn;
