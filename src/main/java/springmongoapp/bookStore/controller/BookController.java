@@ -34,6 +34,7 @@ public class BookController {
     @RequestMapping(value="/update", method = {RequestMethod.PUT, RequestMethod.GET})
     public ModelAndView update(Book book)
     {
+
         service.update(book);
         return new ModelAndView( "redirect:/catalog");
     }
