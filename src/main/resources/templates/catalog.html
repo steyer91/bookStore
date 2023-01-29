@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Księgarnia</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+        crossorigin="anonymous">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" th:href="@{/index}"><b>Księgarnia</b></a>
+      <a class="navbar-brand" th:href="@{/logout}"><b>Wyloguj się</b></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav>
+  <br /><br /><br />
+  <div class="container">
+    <div class="row col-md-10">
+      <br /><br /><br />
+      <h2>Katalog książek</h2>
+    </div>
+    <form method="get" th:action="@{/catalog}">
+      <div class="col-3">
+        <div class="input-group mb-1">
+          <input class="form-control" type="text" name="genre" placeholder="Gatunek" aria-label="Gatunek" aria-describedby="basic-addon2">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="submit" >Filtruj</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <br /><br />
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBook" data-whatever="@mdo">Dodaj</button>
+
+    <br /><br />
+    <table class="table table-bordered table-hover ">
+      <thead class="table-default bg-primary navbar-brand">
+      <tr class="text-light">
+        <th>Id</th>
+        <th>ISBN</th>
+        <th>Tytuł</th>
+        <th>Autor</th>
+        <th>Gatunek</th>
+        <th>Ilość</th>
+        <th>Akcje</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr th:each = "book : ${books}">
+          <td th:text = "${book.id}"></td>
+          <td th:text = "${book.isbn}"></td>
+          <td th:text = "${book.title}"></td>
+          <td th:text = "${book.author}"></td>
+          <td th:text = "${book.genre}"></td>
+          <td th:text = "${book.amount}"></td>
+          <td>
+            <div class="btn-group">
+              <a th:href="@{/api/v1/book(id=${book.id})}" class="btn btn-success" id="editButton">Edytuj</a>
+              <a th:href="@{/api/v1/book/delete(id=${book.id})}" class="btn btn-warning" id="deleteButton" aria-pressed="true">Usuń</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- OKNO DODAWANIA -->
+    <div class="modal fade" id="addBook" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addModalLabel">Dodaj pozycję</h5>
+          </div>
+          <div class="modal-body">
+            <form th:action="@{/api/v1/book}" method="post">
+              <div class="form-group">
+                <label for="isbnAdd" class="col-form-label">ISBN:</label>
+                <input type="text" class="form-control" id="isbnAdd" name="isbn" >
+              </div>
+              <div class="form-group">
+                <label for="titleAdd" class="col-form-label">Tytuł:</label>
+                <input type="text" class="form-control" id="titleAdd" name="title">
+              </div>
+              <div class="form-group">
+                <label for="titleAdd" class="col-form-label">Autor:</label>
+                <input type="text" class="form-control" id="authorAdd" name="author">
+              </div>
+              <div class="form-group">
+                <label for="titleAdd" class="col-form-label">Gatunek:</label>
+                <input type="text" class="form-control" id="genreAdd" name="genre">
+              </div>
+              <div class="form-group">
+                <label for="amountAdd" class="col-form-label">Ilość:</label>
+                <input type="text" class="form-control" id="amountAdd" name="amount">
+              </div>
+              </br>
+              <button type="submit" class="btn btn-primary">Zatwierdź</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OKNO USUWANIA -->
+    <div class="modal fade" id="deleteBook" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Potwierdź usunięcie</h5>
+          </div>
+          <div class="modal-body">
+            <p>Jesteś pewny że chcesz usunąć tę pozycję?</p>
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" id="confirmDeleteButton" href="">Tak, usuń</a>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OKNO MODYFIKACJI -->
+    <div class="modal fade" id="editBook" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+      <form th:action="@{/api/v1/book/update}" method="put">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateModalLabel">Edytuj pozycję</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                  <label hidden for="idEdit" class="col-form-label">Id:</label>
+                  <input type="hidden" class="form-control" id="idEdit" name="id" readonly>
+                </div>
+              <div class="form-group">
+                <label for="isbnEdit" class="col-form-label">ISBN:</label>
+                <input type="text" class="form-control" id="isbnEdit" name="isbn" readonly>
+              </div>
+                <div class="form-group">
+                  <label for="titleEdit" class="col-form-label">Tytuł:</label>
+                  <input type="text" class="form-control" id="titleEdit" name="title">
+                </div>
+                <div class="form-group">
+                  <label for="authorEdit" class="col-form-label">Autor:</label>
+                  <input type="text" class="form-control" id="authorEdit" name="author">
+                </div>
+                <div class="form-group">
+                  <label for="genreEdit" class="col-form-label">Gatunek:</label>
+                  <input type="text" class="form-control" id="genreEdit" name="genre">
+                </div>
+                <div class="form-group">
+                  <label for="amountEdit" class="col-form-label">Ilość:</label>
+                  <input type="text" class="form-control" id="amountEdit" name="amount">
+                </div>
+                </br>
+                <button type="submit" class="btn btn-primary">Zatwierdź</button>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var $ = jQuery;
+        jQuery(document).ready(function($){
+              $('table #deleteButton').on('click', function(event){
+                  event.preventDefault();
+                  var href = $(this).attr('href');
+
+                  $('#confirmDeleteButton').attr('href', href);
+                  $('#deleteBook').modal();
+              });
+        });
+        jQuery(document).ready(function($){
+              $('table #editButton').on('click', function(event){
+                  event.preventDefault();
+                  var href = $(this).attr('href');
+
+                  $.get(href, function(book, status){
+                    $('#idEdit').val(book.id);
+                    $('#isbnEdit').val(book.isbn);
+                    $('#titleEdit').val(book.title);
+                    $('#authorEdit').val(book.author);
+                    $('#genreEdit').val(book.genre);
+                    $('#amountEdit').val(book.amount);
+                  });
+
+                  $('#editBook').modal();
+              });
+        });
+
+
+    </script>
+  </div>
+</body>
+</html>
