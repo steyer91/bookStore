@@ -14,12 +14,10 @@ import java.util.Optional;
 @RequestMapping("/")
 public class CatalogController {
     private final BookService service;
-
     public CatalogController(BookService service)
     {
         this.service = service;
     }
-
 
     @GetMapping("/catalog")
     public String getAll(Model model, String genre)
